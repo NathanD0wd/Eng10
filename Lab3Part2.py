@@ -38,7 +38,7 @@ while True:
         if d <=5:
             pixel_flip()
             if t >= 1.0:
-                cp.play_tone(440, 0.25)
+                cp.play_tone(440, 0.25) # First number is pitch, second is length of tone
                 t = 0
 # Closer than 15 cm is Very Close
         elif d <= 15:
