@@ -49,41 +49,8 @@ while (True):
             #For output
             while (display != -1):
                 time.sleep(1.5)
-                num_twos_accel = accel / 2
-                green = 1
-                blue = 0
-                red = 0
                 display = 1
-                for x in range(num_twos_accel):
-                    num = x / 10
-                    if num >= 1:
-                        if num < 2:
-                            red = 1
-                    if num >= 2:
-                        if num < 3:
-                            green = 0
-                    if num >= 3:
-                        if num < 4:
-                            red = 0
-                            blue = 1
-                    if num >= 4:
-                        red = 1
-                    cp.pixels[x%10] = ( 50 * red , 50 * green , 50 * blue)
-                    time.sleep(0.3)
-                while (display == 1):
-                    time.sleep(0.25)
-                    if cp.button_a:
-                        display = 0
-                        cp.pixels.fill((0,0,0))
-                    if cp.button_b:
-                        display = -1
-                    if cp.switch == False:
-                        display = -1
-                time.sleep(0.7)
-                if ( display == -1 ):
-                    cp.pixels.fill((0,0,0))
-                    break
-
+                
                 max_speed = max_speed - 1
                 print(max_speed)
                 green = 1
@@ -106,6 +73,7 @@ while (True):
                     cp.pixels[x%5] = ( 50 * red , 50 * green , 50 * blue)
                     time.sleep(0.3)
                 
+                time.sleep(0.7)
                 num_decimal_speed = ((max_speed % 1) / 0.1) - 0.5
                 print(num_decimal_speed)
                 green = 1
@@ -117,6 +85,41 @@ while (True):
                         green = 0
                         blue = 1
                     cp.pixels[x%5+5] = ( 50 * red , 50 * green , 50 * blue)
+                    time.sleep(0.3)
+                
+                while (display == 1):
+                    time.sleep(0.25)
+                    if cp.button_a:
+                        display = 0
+                        cp.pixels.fill((0,0,0))
+                    if cp.button_b:
+                        display = -1
+                    if cp.switch == False:
+                        display = -1
+                time.sleep(0.7)
+                if ( display == -1 ):
+                    cp.pixels.fill((0,0,0))
+                    break
+                
+                num_twos_accel = accel / 2
+                green = 1
+                blue = 0
+                red = 0
+                for x in range(num_twos_accel):
+                    num = x / 10
+                    if num >= 1:
+                        if num < 2:
+                            red = 1
+                    if num >= 2:
+                        if num < 3:
+                            green = 0
+                    if num >= 3:
+                        if num < 4:
+                            red = 0
+                            blue = 1
+                    if num >= 4:
+                        red = 1
+                    cp.pixels[x%10] = ( 50 * red , 50 * green , 50 * blue)
                     time.sleep(0.3)
 
                 while (display == 0):
