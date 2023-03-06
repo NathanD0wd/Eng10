@@ -4,8 +4,10 @@ class g:
 g.pixelstates = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 g.count = 0
 g.measuring = false
-g.updatespeed = 1/60
-print(g.count)
+g.updatespeed = .025
+g.max_speed = 0
+g.accel = 0
+print("- loading -")
 g.gameobjects = [
     manager()
     #menu(),

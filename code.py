@@ -1,7 +1,11 @@
 true = True
 false = False
 
-exec(open('gameobjects.py').read())
+import math
+import time
+from adafruit_circuitplayground import cp
+
+exec(open('punchobjects.py').read())
 exec(open('pragma.py').read())
 exec(open('sinmult.py').read())
 exec(open('input.py').read())
@@ -14,30 +18,20 @@ def instance_create(x, y, obj, color=(20,20,20)):
     chump.y = y
     chump.color = color
 
-import math
-import time
-from adafruit_circuitplayground import cp
-
-
-max_speed = 0
-time_to_max = 0
-accel = 0
-num_twos_accel = 0
-num_decimal_speed = 0
-has_run = false
-display = 1
-check = false
-
 def main():
+    print("- init complete -")
     while (true):
+        g.count += 1
         if not cp.switch:
-            time.sleep(0.05)
+            j=0
+            while j<10:
+                cp.pixels[j] = (0, 0, 10+sinmult(g.count+j*20, 5, 10))
+                j += 1
+            time.sleep(g.updatespeed)
             continue
         i = 0
         input()
-        while i < 10:
-            g.pixelstates[i] = (0, 0, 0)
-            i += 1
+        draw_full((0, 0, 0))
         i = 0
         while i < len(g.gameobjects):
             g.gameobjects[i].step()
@@ -47,10 +41,10 @@ def main():
             g.gameobjects[i].draw()
             i += 1
         i = 0
-        while i < 10:
-            cp.pixels[i] = g.pixelstates[i]
-            i += 1
+        led_update()
         time.sleep(g.updatespeed)
+
+    print("you managed to break out of main, asshole")
 
 
 main()
