@@ -1,4 +1,4 @@
-class g:
+class g: #global object that contains all kinds of fun things
     merry = "christmas"
 
 g.pixelstates = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

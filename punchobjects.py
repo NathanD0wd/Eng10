@@ -16,18 +16,15 @@ class gameobject:
     def destroy(me):
         g.gameobjects.remove(me)
 
-class manager(gameobject):
+class manager(gameobject): #general manager that never gets destroyed. starts the measurement process
     def step(me):
         if g.left.hit and not g.measuring:
-            
             print("taking measurments")
             g.measuring = true
-            instance_create(0, 0, screenclearer)
-            instance_create(0, 0, measurer)
-    def draw(me):
-        return
+            instance_create(-1, -1, screenclearer)
+            instance_create(-1, -1, measurer)
             
-class screenclearer(gameobject):
+class screenclearer(gameobject): #that little particle effect after you press the button
     def draw(me):
         me.count += 1
         if me.count < 10:
@@ -35,7 +32,7 @@ class screenclearer(gameobject):
         else:
             me.destroy()
 
-class measurer(gameobject):
+class measurer(gameobject): #the thing that does the math
     has_run = false
     has_completed = false
     max_speed = 0
@@ -67,49 +64,48 @@ class measurer(gameobject):
             g.accel = accel
             instance_create(0, 0, counter)
             me.destroy()
-    def draw(me):
-        return
 
-class counter(gameobject):
+class counter(gameobject): #the thing that displays your stats
     detractor1 = -1
     detractor2 = -1
     tickspeed = .3
-    def draw(me):
-        if g.left.hit:
-            me.destroy()
     def step(me):
         if me.detractor1 == -1:
             me.detractor1 = math.ceil(g.max_speed)
         if me.detractor2 == -1:
             me.detractor2 = math.ceil(g.accel/10)
+        
         if me.detractor1 > 0:
             me.detractor1 -= me.tickspeed
         else:
             me.detractor1 = 0
-        bincount = math.floor(g.max_speed-me.detractor1)
-        leftover = (g.max_speed-me.detractor1)%1
-        doneone = false
-        i=0
-        while i<5:
-            dabool = 1 if (bincount & 2**i) else 0
-            draw_led(1, 4-i, (dabool*10, dabool*10-leftover*10, dabool*10-leftover*10))
-            if dabool:
-                leftover = 0
-            i += 1
-        #bincount = math.floor(g.max_speed%1*10)
+        
         if me.detractor2 > 0:
             me.detractor2 -= me.tickspeed
         else:
             me.detractor2 = 0
+        if g.left.hit:
+            me.destroy()
+    def draw(me):
+        
+        bincount = math.floor(g.max_speed-me.detractor1)
+        leftover = (g.max_speed-me.detractor1)%1
+        doneone = false
+        i=0
+        while i<5: #right side has max speed
+            dabool = 1 if (bincount & 2**i) else 0
+            if dabool:
+                draw_led(1, 4-i, (10, 10-leftover*10, 10-leftover*10))
+                leftover = 0
+            i += 1
+        #bincount = math.floor(g.max_speed%1*10)
         bincount = math.floor(g.accel/10-me.detractor2)
         leftover = (g.accel/10-me.detractor2)%1
         doneone = false
         i=0
-        while i<5:
+        while i<5: #left side has acceleration
             dabool = 1 if (bincount & 2**i) else 0
-            draw_led(0, 4-i, (dabool*10, dabool*10-leftover*10, dabool*10-leftover*10))
             if dabool:
+                draw_led(0, 4-i, (10, 10-leftover*10, 10-leftover*10))
                 leftover = 0
             i += 1
-    def draw(me):
-        return
