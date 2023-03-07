@@ -39,7 +39,7 @@ class measurer(gameobject): #the thing that does the math
     time_to_max = 0
     def step(me):
         x, y, z = cp.acceleration
-        speed = (abs(x)+abs(y)+abs(z)-9.8)*g.updatespeed #speed in m/s over 0.025 measurespeed
+        speed = (abs(x)+abs(y)+abs(z)-9.8)*g.updatespeed #speed in m/s over updatespeed
         print(speed)
         if speed > 1 and not me.has_run:
             me.has_run = true
@@ -55,8 +55,8 @@ class measurer(gameobject): #the thing that does the math
             else:
                 me.has_completed = true
         if me.has_completed:
-            accel = me.max_speed/(me.time_to_max*g.updatespeed)#calculate acceleration to max speed 
-            me.max_speed *= 2.23694#convert max speed to mph
+            accel = me.max_speed/(me.time_to_max*g.updatespeed) #calculate acceleration to max speed 
+            me.max_speed *= 2.23694 #convert max speed to mph
             print("Max Speed: " + str(me.max_speed) + " mph")
             print("Acceleration to Max Speed: " + str(accel) + " m/s^2")
             g.measuring = false
@@ -69,6 +69,7 @@ class counter(gameobject): #the thing that displays your stats
     detractor1 = -1
     detractor2 = -1
     tickspeed = .3
+    mode = 0
     def step(me):
         if me.detractor1 == -1:
             me.detractor1 = math.ceil(g.max_speed)
@@ -86,26 +87,68 @@ class counter(gameobject): #the thing that displays your stats
             me.detractor2 = 0
         if g.left.hit:
             me.destroy()
+        if g.right.hit:
+            me.mode = (me.mode+1)%3
     def draw(me):
-        
-        bincount = math.floor(g.max_speed-me.detractor1)
-        leftover = (g.max_speed-me.detractor1)%1
-        doneone = false
-        i=0
-        while i<5: #right side has max speed
-            dabool = 1 if (bincount & 2**i) else 0
-            if dabool:
-                draw_led(1, 4-i, (10, 10-leftover*10, 10-leftover*10))
-                leftover = 0
-            i += 1
-        #bincount = math.floor(g.max_speed%1*10)
-        bincount = math.floor(g.accel/10-me.detractor2)
-        leftover = (g.accel/10-me.detractor2)%1
-        doneone = false
-        i=0
-        while i<5: #left side has acceleration
-            dabool = 1 if (bincount & 2**i) else 0
-            if dabool:
-                draw_led(0, 4-i, (10, 10-leftover*10, 10-leftover*10))
-                leftover = 0
-            i += 1
+        if not me.mode: #display both
+            bincount = math.floor(g.max_speed-me.detractor1)
+            leftover = (g.max_speed-me.detractor1)%1
+            doneone = false
+            i=0
+            while i<5: #right side has max speed
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(1, 4-i, (10, 10-leftover*10, 10-leftover*10))
+                    leftover = 0
+                i += 1
+            bincount = math.floor(g.accel/10-me.detractor2)
+            leftover = (g.accel/10-me.detractor2)%1
+            doneone = false
+            i=0
+            while i<5: #left side has acceleration
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(0, 4-i, (10, 10-leftover*10, 10-leftover*10))
+                    leftover = 0
+                i += 1
+            draw_led(0, 0, (10, 10, 0))
+        elif me.mode == 1: #display speed detailed
+            bincount = math.floor(g.max_speed)
+            doneone = false
+            i=0
+            while i<5: #right side has max speed
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(1, 4-i, (10, 10, 10))
+                    leftover = 0
+                i += 1
+            bincount = math.floor(g.max_speed%1*10)
+            doneone = false
+            i=0
+            while i<5: #left side has acceleration
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(0, 4-i, (10, 10, 10))
+                    leftover = 0
+                i += 1
+            draw_led(0, 0, (0, 10, 0))
+        else: #display acceleration detailed
+            bincount = math.floor(g.accel/10)
+            doneone = false
+            i=0
+            while i<5: #right side has max speed
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(1, 4-i, (10, 10, 10))
+                    leftover = 0
+                i += 1
+            bincount = math.floor(g.accel%10)
+            doneone = false
+            i=0
+            while i<5: #left side has acceleration
+                dabool = 1 if (bincount & 2**i) else 0
+                if dabool:
+                    draw_led(0, 4-i, (10, 10, 10))
+                    leftover = 0
+                i += 1
+            draw_led(0, 0, (0, 10, 10))
