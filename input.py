@@ -12,7 +12,6 @@ def input():
         if g.right.held >= 1:
             g.right.hit = 0
         else:
-            print("righted")
             g.right.hit = 1
         g.right.held += 1
     elif g.right.held >= 1:
@@ -28,7 +27,6 @@ def input():
         if g.left.held >= 1:
             g.left.hit = 0
         else:
-            print("lefted")
             g.left.hit = 1
         g.left.held += 1
     elif g.left.held >= 1:
