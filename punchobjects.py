@@ -41,7 +41,7 @@ class measurer(gameobject): #the thing that does the math
         x, y, z = cp.acceleration
         speed = (abs(x)+abs(y)+abs(z)-9.8)*g.updatespeed #speed in m/s over 0.025 measurespeed
         print(speed)
-        if speed > 1:
+        if speed > 1 and not me.has_run:
             me.has_run = true
             me.max_speed = speed
             me.time_to_max = 1
